@@ -26,7 +26,16 @@ app.use(
 app.set("View Engine", "ejs");
 app.set("views", path.join(__dirname, "./views"));
 
+app.locals.siteName = 'ROUX Meetups';
+
 app.use(express.static(path.join(__dirname, "./static")));
+
+app.use(async (request, response, next) => {
+  const names = await speakersService.getNames();
+  response.locals.speakerNames = names;
+  return next();
+});
+
 app.use(
   "/",
   routes({
